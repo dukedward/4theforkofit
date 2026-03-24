@@ -54,7 +54,11 @@ export default function AdminMenu() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const { data: items = [], isLoading } = useQuery({
+  const {
+    data: items = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["admin-menu-items"],
     queryFn: () => listItems("-created_date"),
   });
@@ -167,6 +171,8 @@ export default function AdminMenu() {
   };
 
   const isSaving = createMutation.isPending || updateMutation.isPending;
+
+  console.log("Bills error:", error);
 
   return (
     <div className="min-h-screen bg-background">

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import MenuItemCard from "@/components/menu/MenuItemCard";
 import { motion } from "framer-motion";
+import { listItems } from "../api/menuItem";
 
 const CATEGORIES = [
   "All",
@@ -20,7 +20,7 @@ export default function MenuPage() {
 
   const { data: menuItems = [], isLoading } = useQuery({
     queryKey: ["menu-items"],
-    queryFn: () => base44.entities.MenuItem.filter({ available: true }),
+    queryFn: () => listItems.filter({ available: true }),
   });
 
   const filtered =

@@ -50,7 +50,7 @@ export default function HeroSection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 font-body font-semibold px-8 text-base"
+                className="border-white/30 text-primary hover:bg-white/10 font-body font-semibold px-8 text-base"
               >
                 Place an Order
               </Button>

@@ -1,5 +1,4 @@
 import React from "react";
-import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedCarousel from "@/components/home/FeaturedCarousel";
