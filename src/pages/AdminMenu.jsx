@@ -29,6 +29,7 @@ import { listItems, createItem, deleteItem, updateItem } from "../api/menuItem";
 
 const CATEGORIES = [
   "Entrees",
+  "Chicken",
   "Sides",
   "Hand-crafted Sauces",
   "Beverages",

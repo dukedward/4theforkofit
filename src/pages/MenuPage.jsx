@@ -9,6 +9,7 @@ import { listItems } from "../api/menuItem";
 const CATEGORIES = [
   "All",
   "Entrees",
+  "Chicken",
   "Sides",
   "Hand-crafted Sauces",
   "Beverages",

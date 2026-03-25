@@ -13,6 +13,7 @@ import MenuPage from "@/pages/MenuPage";
 import CartPage from "@/pages/CartPage";
 import AdminMenu from "@/pages/AdminMenu";
 import AdminOrders from "@/pages/AdminOrders";
+import OrderHistory from "@/pages/OrderHistory";
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } =
@@ -43,6 +44,7 @@ const AuthenticatedApp = () => {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/admin" element={<AdminMenu />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
+        <Route path="/orders" element={<OrderHistory />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
