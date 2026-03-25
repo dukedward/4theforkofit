@@ -4,18 +4,22 @@ import { ShoppingCart, Menu, X, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/lib/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
   { label: "Home", path: "/" },
   { label: "Menu", path: "/menu" },
   { label: "Order", path: "/cart" },
+  { label: "My Orders", path: "/orders" },
 ];
 
 export default function Navbar() {
   const { itemCount } = useCart();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isAdmin = user?.role === "admin";
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">

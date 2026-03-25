@@ -34,7 +34,11 @@ const STATUSES = [
 export default function AdminOrders() {
   const queryClient = useQueryClient();
 
-  const { data: orders = [], isLoading } = useQuery({
+  const {
+    data: orders = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["admin-orders"],
     queryFn: () => listOrders("-created_date"),
   });
@@ -44,6 +48,8 @@ export default function AdminOrders() {
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["admin-orders"] }),
   });
+
+  console.log("Order error:", error);
 
   return (
     <div className="min-h-screen bg-background">
@@ -150,7 +156,7 @@ export default function AdminOrders() {
                 )}
                 <p className="font-body text-xs text-muted-foreground mt-2">
                   Ordered:{" "}
-                  {format(new Date(order.created_date), "MMM d, yyyy h:mm a")}
+                  {format(new Date(order.created_at), "MMM d, yyyy h:mm a")}
                 </p>
               </div>
             ))}

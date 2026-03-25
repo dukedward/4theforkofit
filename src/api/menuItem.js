@@ -11,18 +11,17 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-export async function listItems(userUid) {
-  const q = query(
-    collection(db, "items"),
-    where("user_uid", "==", userUid),
-    orderBy("created_at", "desc"),
-  );
+export async function listItems(filters = {}) {
+  let q = collection(db, "items");
+
+  if (filters.available !== undefined) {
+    q = query(q, where("available", "==", filters.available));
+  }
 
   const snap = await getDocs(q);
-
-  return snap.docs.map((d) => ({
-    id: d.id,
-    ...d.data(),
+  return snap.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
 }
 

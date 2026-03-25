@@ -11,12 +11,12 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-export async function listOrders(userUid) {
-  const q = query(
-    collection(db, "orders"),
-    where("user_uid", "==", userUid),
-    orderBy("created_at", "desc"),
-  );
+export async function listOrders(filters = {}) {
+  let q = collection(db, "orders");
+
+  if (filters.created_at !== undefined) {
+    q = query(q, where("created_at", "==", filters.created_at));
+  }
 
   const snap = await getDocs(q);
 
@@ -26,24 +26,26 @@ export async function listOrders(userUid) {
   }));
 }
 
-export async function createOrder(data) {
+export async function createOrder(order) {
   const now = Date.now();
-
-  const ref = await addDoc(collection(db, "orders"), {
-    customer_name: data.name ?? "",
-    customer_email: data.email ?? "",
-    customer_phone: data.phone ?? "",
-    total: Number(data.total ?? 0),
-    status: data.status ?? "pending",
-    items: Array(data.items ?? {}),
-    notes: data.notes ?? "",
-    event_date: data.event_date ?? "",
-    user_uid: data.user_uid,
+  const payload = {
+    customer_name: order.customer_name || "",
+    customer_email: order.customer_email || "",
+    customer_phone: order.customer_phone || "",
+    total: Number(order.total || 0),
+    status: "pending",
+    items: (order.items || []).map((item) => ({
+      menu_item_id: item.menu_item_id || "",
+      name: item.name || "",
+      price: Number(item.price || 0),
+      quantity: Number(item.quantity || 0),
+    })),
+    notes: order.notes || "",
+    event_date: order.event_date || "",
     created_at: now,
-    updated_at: now,
-  });
+  };
 
-  return ref.id;
+  return await addDoc(collection(db, "orders"), payload);
 }
 
 export async function updateOrder(id, data) {

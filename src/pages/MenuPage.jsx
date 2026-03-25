@@ -18,15 +18,21 @@ const CATEGORIES = [
 export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const { data: menuItems = [], isLoading } = useQuery({
+  const {
+    data: menuItems = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["menu-items"],
-    queryFn: () => listItems.filter({ available: true }),
+    queryFn: () => listItems({ available: true }),
   });
 
   const filtered =
     activeCategory === "All"
       ? menuItems
       : menuItems.filter((item) => item.category === activeCategory);
+
+  // console.log("Items error:", error);
 
   return (
     <div className="min-h-screen">

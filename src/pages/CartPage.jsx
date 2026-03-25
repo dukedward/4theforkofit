@@ -27,7 +27,7 @@ export default function CartPage() {
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await createOrder({
+    const orderPayload = {
       ...form,
       items: items.map((i) => ({
         menu_item_id: i.menu_item_id,
@@ -36,7 +36,12 @@ export default function CartPage() {
         quantity: i.quantity,
       })),
       total,
-    });
+    };
+
+    console.log("ORDER PAYLOAD:", orderPayload);
+    console.log("ORDER ITEMS:", orderPayload.items);
+
+    await createOrder(orderPayload);
     clearCart();
     setStep("success");
     setSubmitting(false);

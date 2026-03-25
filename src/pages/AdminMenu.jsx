@@ -172,7 +172,7 @@ export default function AdminMenu() {
 
   const isSaving = createMutation.isPending || updateMutation.isPending;
 
-  console.log("Bills error:", error);
+  // console.log("Items error:", error);
 
   return (
     <div className="min-h-screen bg-background">
