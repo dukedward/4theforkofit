@@ -118,12 +118,14 @@ export default function AdminMenu() {
 
   const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
+    console.log(file);
+
     if (!file) return;
 
-    if (!user) {
-      toast.error("You must be signed in to upload images.");
-      return;
-    }
+    // if (!user) {
+    //   toast.error("You must be signed in to upload images.");
+    //   return;
+    // }
 
     if (!file.type.startsWith("image/")) {
       toast.error("Only image files are allowed.");
@@ -139,7 +141,10 @@ export default function AdminMenu() {
 
       const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
       const fileName = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
-      const storageRef = ref(storage, `users/${user.uid}/images/${fileName}`);
+      const storageRef = ref(storage, `/images/${fileName}`);
+      console.log(ext);
+      console.log(fileName);
+      console.log(storageRef);
 
       await uploadBytes(storageRef, file, {
         contentType: file.type,
