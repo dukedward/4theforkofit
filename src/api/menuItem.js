@@ -16,6 +16,8 @@ export async function listItems(filters = {}) {
 
   if (filters.available !== undefined) {
     q = query(q, where("available", "==", filters.available));
+  } else {
+    q = query(q, orderBy("name", "asc"));
   }
 
   const snap = await getDocs(q);
