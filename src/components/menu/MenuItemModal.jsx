@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 
+const CHICKEN_SIZES = [
+  { size: "10pc", price: 15 },
+  { size: "20pc", price: 26 },
+  { size: "30pc", price: 37 },
+];
+
 export default function MenuItemModal({ item, onClose }) {
   const { addItem } = useCart();
+  const [selectedSize, setSelectedSize] = useState(CHICKEN_SIZES[0]);
+  const hasSizes = item?.has_sizes;
 
   if (!item) return null;
 
@@ -41,7 +49,10 @@ export default function MenuItemModal({ item, onClose }) {
               {item.name}
             </h2>
             <span className="font-body text-primary font-bold text-2xl whitespace-nowrap">
-              ${item.price?.toFixed(2)}
+              $
+              {hasSizes
+                ? selectedSize.price.toFixed(2)
+                : item.price?.toFixed(2)}
             </span>
           </div>
 
@@ -51,9 +62,41 @@ export default function MenuItemModal({ item, onClose }) {
             </p>
           )}
 
+          {hasSizes && (
+            <div className="mb-4">
+              <label className="font-body text-sm font-medium text-foreground block mb-2">
+                Amount
+              </label>
+              <div className="flex gap-2 flex-wrap">
+                {CHICKEN_SIZES.map((s) => (
+                  <button
+                    key={s.size}
+                    onClick={() => setSelectedSize(s)}
+                    className={`px-4 py-2 rounded-lg border font-body text-sm font-medium transition-colors ${
+                      selectedSize.size === s.size
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-background border-border hover:border-primary text-foreground"
+                    }`}
+                  >
+                    {s.size} - ${s.price}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <Button
             onClick={() => {
-              addItem(item);
+              if (hasSizes) {
+                addItem({
+                  ...item,
+                  selected_size: selectedSize.size,
+                  price: selectedSize.price,
+                  display_name: `${item.name} (${selectedSize.size})`,
+                });
+              } else {
+                addItem(item);
+              }
               onClose();
             }}
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-body font-semibold py-5"

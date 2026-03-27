@@ -45,7 +45,11 @@ export default function MenuItemCard({ item, index }) {
           size="sm"
           onClick={(e) => {
             e.stopPropagation();
-            addItem(item);
+            if (item.has_sizes) {
+              setShowModal(true);
+            } else {
+              addItem(item);
+            }
           }}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-body"
         >

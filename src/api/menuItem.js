@@ -36,6 +36,7 @@ export async function createItem(data) {
     price: Number(data.price ?? 0),
     category: data.category ?? "Entrees",
     image_url: data.image_url ?? "",
+    has_sizes: data.has_sizes ?? false,
     featured: data.featured ?? false,
     available: data.available ?? true,
     created_at: now,

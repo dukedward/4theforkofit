@@ -407,6 +407,13 @@ export default function AdminMenu() {
               </div>
               <div className="flex items-center gap-2">
                 <Switch
+                  checked={form.has_sizes}
+                  onCheckedChange={(v) => setForm({ ...form, has_sizes: v })}
+                />
+                <Label className="font-body text-sm">Has Sizes</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
                   checked={form.available}
                   onCheckedChange={(v) => setForm({ ...form, available: v })}
                 />

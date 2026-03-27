@@ -17,8 +17,11 @@ export default function CartItem({ item }) {
       )}
       <div className="flex-1 min-w-0">
         <h4 className="font-display text-base font-semibold text-foreground truncate">
-          {item.name}
+          {item.base_name || item.name}
         </h4>
+        {item.selected_size && (
+          <p className="text-xs text-muted-foreground">{item.selected_size}</p>
+        )}
         <p className="font-body text-sm text-primary font-medium">
           ${item.price?.toFixed(2)} each
         </p>
@@ -28,7 +31,7 @@ export default function CartItem({ item }) {
           variant="outline"
           size="icon"
           className="h-8 w-8"
-          onClick={() => updateQuantity(item.menu_item_id, item.quantity - 1)}
+          onClick={() => updateQuantity(item.cart_key, item.quantity - 1)}
         >
           <Minus className="w-3 h-3" />
         </Button>
@@ -39,7 +42,7 @@ export default function CartItem({ item }) {
           variant="outline"
           size="icon"
           className="h-8 w-8"
-          onClick={() => updateQuantity(item.menu_item_id, item.quantity + 1)}
+          onClick={() => updateQuantity(item.cart_key, item.quantity + 1)}
         >
           <Plus className="w-3 h-3" />
         </Button>
@@ -51,7 +54,7 @@ export default function CartItem({ item }) {
         variant="ghost"
         size="icon"
         className="h-8 w-8 text-destructive"
-        onClick={() => removeItem(item.menu_item_id)}
+        onClick={() => removeItem(item.cart_key)}
       >
         <Trash2 className="w-4 h-4" />
       </Button>

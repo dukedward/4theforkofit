@@ -7,19 +7,26 @@ export function CartProvider({ children }) {
 
   const addItem = useCallback((menuItem, quantity = 1) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.menu_item_id === menuItem.id);
+      const cartKey = `${menuItem.id}-${menuItem.selected_size || "default"}`;
+
+      const existing = prev.find((i) => i.cart_key === cartKey);
+
       if (existing) {
         return prev.map((i) =>
-          i.menu_item_id === menuItem.id
+          i.cart_key === cartKey
             ? { ...i, quantity: i.quantity + quantity }
             : i,
         );
       }
+
       return [
         ...prev,
         {
+          cart_key: cartKey,
           menu_item_id: menuItem.id,
-          name: menuItem.name,
+          name: menuItem.display_name || menuItem.name,
+          base_name: menuItem.name,
+          selected_size: menuItem.selected_size || null,
           price: menuItem.price,
           quantity,
           image_url: menuItem.image_url,
@@ -28,17 +35,18 @@ export function CartProvider({ children }) {
     });
   }, []);
 
-  const removeItem = useCallback((menuItemId) => {
-    setItems((prev) => prev.filter((i) => i.menu_item_id !== menuItemId));
+  const removeItem = useCallback((cartKey) => {
+    setItems((prev) => prev.filter((i) => i.cart_key !== cartKey));
   }, []);
 
-  const updateQuantity = useCallback((menuItemId, quantity) => {
+  const updateQuantity = useCallback((cartKey, quantity) => {
     if (quantity <= 0) {
-      setItems((prev) => prev.filter((i) => i.menu_item_id !== menuItemId));
+      setItems((prev) => prev.filter((i) => i.cart_key !== cartKey));
       return;
     }
+
     setItems((prev) =>
-      prev.map((i) => (i.menu_item_id === menuItemId ? { ...i, quantity } : i)),
+      prev.map((i) => (i.cart_key === cartKey ? { ...i, quantity } : i)),
     );
   }, []);
 
