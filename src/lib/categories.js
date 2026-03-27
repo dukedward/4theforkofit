@@ -1,8 +1,8 @@
 export const CATEGORIES = [
   "All",
-  "Entrees",
   "Chicken",
-  "Sides",
+  "Pork",
+  "Fixins",
   "Hand-crafted Sauces",
   "Beverages",
   "Breads & Specials",

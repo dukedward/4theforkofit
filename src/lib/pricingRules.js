@@ -1,3 +1,5 @@
+import { size } from "lodash";
+
 export const PRICING_RULES = {
   chicken: {
     wings: [
@@ -16,4 +18,14 @@ export const PRICING_RULES = {
     { size: "pint", price: 10 },
     { size: "quart", price: 20 },
   ],
+  pork: {
+    ribs: [
+      { size: "1 rack", price: 40 },
+      { size: "2 racks", price: 70 },
+    ],
+    default: [
+      { size: "1 rack", price: 40 },
+      { size: "2 racks", price: 70 },
+    ],
+  },
 };
