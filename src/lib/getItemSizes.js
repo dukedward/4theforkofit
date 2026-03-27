@@ -11,6 +11,13 @@ export function getItemSizes(item) {
     return PRICING_RULES.chicken.default;
   }
 
+  if (category === "pork") {
+    if (name.includes("ribs")) {
+      return PRICING_RULES.pork.ribs;
+    }
+    // return PRICING_RULES.chicken.default;
+  }
+
   if (category === "hand-crafted sauces") {
     return PRICING_RULES.sauce;
   }

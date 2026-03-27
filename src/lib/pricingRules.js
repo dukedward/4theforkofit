@@ -23,9 +23,5 @@ export const PRICING_RULES = {
       { size: "1 rack", price: 40 },
       { size: "2 racks", price: 70 },
     ],
-    default: [
-      { size: "1 rack", price: 40 },
-      { size: "2 racks", price: 70 },
-    ],
   },
 };
