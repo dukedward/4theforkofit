@@ -4,12 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { getItemSizes } from "@/lib/getItemSizes";
 
-const CHICKEN_SIZES = [
-  { size: "10pc", price: 15 },
-  { size: "20pc", price: 26 },
-  { size: "30pc", price: 37 },
-];
-
 export default function MenuItemModal({ item, onClose }) {
   const { addItem } = useCart();
   const sizes = getItemSizes(item);

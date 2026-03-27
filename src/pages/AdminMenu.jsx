@@ -26,15 +26,7 @@ import { Plus, Pencil, Trash2, Upload, Loader2, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { listItems, createItem, deleteItem, updateItem } from "../api/menuItem";
-
-const CATEGORIES = [
-  "Entrees",
-  "Chicken",
-  "Sides",
-  "Hand-crafted Sauces",
-  "Beverages",
-  "Breads & Specials",
-];
+import { CATEGORIES } from "@/lib/categories";
 
 const emptyItem = {
   name: "",

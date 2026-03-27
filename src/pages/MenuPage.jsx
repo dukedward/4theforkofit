@@ -5,16 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import MenuItemCard from "@/components/menu/MenuItemCard";
 import { motion } from "framer-motion";
 import { listItems } from "../api/menuItem";
-
-const CATEGORIES = [
-  "All",
-  "Entrees",
-  "Chicken",
-  "Sides",
-  "Hand-crafted Sauces",
-  "Beverages",
-  "Breads & Specials",
-];
+import { CATEGORIES } from "@/lib/categories";
 
 export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState("All");

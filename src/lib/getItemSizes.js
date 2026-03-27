@@ -11,7 +11,7 @@ export function getItemSizes(item) {
     return PRICING_RULES.chicken.default;
   }
 
-  if (category === "sauce") {
+  if (category === "hand-crafted sauces") {
     return PRICING_RULES.sauce;
   }
 
