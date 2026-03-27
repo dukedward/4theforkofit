@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
+import { getItemSizes } from "@/lib/getItemSizes";
 
 const CHICKEN_SIZES = [
   { size: "10pc", price: 15 },
@@ -11,8 +12,9 @@ const CHICKEN_SIZES = [
 
 export default function MenuItemModal({ item, onClose }) {
   const { addItem } = useCart();
-  const [selectedSize, setSelectedSize] = useState(CHICKEN_SIZES[0]);
-  const hasSizes = item?.has_sizes;
+  const sizes = getItemSizes(item);
+  const hasSizes = sizes.length > 0;
+  const [selectedSize, setSelectedSize] = useState(sizes[0] || null);
 
   if (!item) return null;
 
@@ -68,12 +70,12 @@ export default function MenuItemModal({ item, onClose }) {
                 Amount
               </label>
               <div className="flex gap-2 flex-wrap">
-                {CHICKEN_SIZES.map((s) => (
+                {sizes.map((s) => (
                   <button
                     key={s.size}
                     onClick={() => setSelectedSize(s)}
                     className={`px-4 py-2 rounded-lg border font-body text-sm font-medium transition-colors ${
-                      selectedSize.size === s.size
+                      selectedSize?.size === s.size
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-background border-border hover:border-primary text-foreground"
                     }`}
@@ -87,7 +89,7 @@ export default function MenuItemModal({ item, onClose }) {
 
           <Button
             onClick={() => {
-              if (hasSizes) {
+              if (hasSizes && selectedSize) {
                 addItem({
                   ...item,
                   selected_size: selectedSize.size,

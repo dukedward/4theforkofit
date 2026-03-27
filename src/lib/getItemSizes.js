@@ -1,0 +1,19 @@
+import { PRICING_RULES } from "./pricingRules";
+
+export function getItemSizes(item) {
+  const category = item.category?.toLowerCase()?.trim() || "";
+  const name = item.name?.toLowerCase()?.trim() || "";
+
+  if (category === "chicken") {
+    if (name.includes("wings")) {
+      return PRICING_RULES.chicken.wings;
+    }
+    return PRICING_RULES.chicken.default;
+  }
+
+  if (category === "sauce") {
+    return PRICING_RULES.sauce;
+  }
+
+  return [];
+}
