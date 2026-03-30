@@ -13,11 +13,18 @@ export const PRICING_RULES = {
       { size: "30pc", price: 45 },
     ],
   },
-  sauce: [
-    { size: "cup", price: 5 },
-    { size: "pint", price: 10 },
-    { size: "quart", price: 20 },
-  ],
+  sauce: {
+    honey: [
+      { size: "cup", price: 4 },
+      { size: "pint", price: 7 },
+      { size: "quart", price: 14 },
+    ],
+    default: [
+      { size: "cup", price: 5 },
+      { size: "pint", price: 10 },
+      { size: "quart", price: 20 },
+    ],
+  },
   pork: {
     ribs: [
       { size: "1 rack", price: 40 },
