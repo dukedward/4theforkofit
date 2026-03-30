@@ -14,12 +14,12 @@ export const PRICING_RULES = {
     ],
   },
   sauce: {
-    honey: [
+    default: [
       { size: "cup", price: 4 },
       { size: "pint", price: 7 },
       { size: "quart", price: 14 },
     ],
-    default: [
+    alt: [
       { size: "cup", price: 5 },
       { size: "pint", price: 10 },
       { size: "quart", price: 20 },

@@ -19,9 +19,9 @@ export function getItemSizes(item) {
   }
 
   if (category === "hand-crafted sauces") {
-    if (name.includes("honey mustard")) {
-      return PRICING_RULES.sauce.honey;
-    }
+    // if (name.includes("honey mustard")) {
+    //   return PRICING_RULES.sauce.honey;
+    // }
     return PRICING_RULES.sauce.default;
   }
 
