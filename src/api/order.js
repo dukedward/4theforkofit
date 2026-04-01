@@ -16,6 +16,8 @@ export async function listOrders(filters = {}) {
 
   if (filters.created_at !== undefined) {
     q = query(q, where("created_at", "==", filters.created_at));
+  } else if (filters.customer_email !== undefined) {
+    q = query(q, where("created_at", "==", filters.customer_email));
   }
 
   const snap = await getDocs(q);

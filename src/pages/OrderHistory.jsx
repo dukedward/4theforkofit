@@ -18,8 +18,8 @@ const STATUS_COLORS = {
 };
 
 export default function OrderHistory() {
-  const { user, isAuthenticated, navigateToLogin } = useAuth();
-
+  const { user, profile, isAuthenticated, isAdmin, loginWithGoogle, logout } =
+    useAuth();
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ["my-orders", user?.email],
     queryFn: () => listOrders({ customer_email: user.email }, "-created_date"),
@@ -38,7 +38,7 @@ export default function OrderHistory() {
             Please sign in to view your order history.
           </p>
           <Button
-            onClick={navigateToLogin}
+            onClick={loginWithGoogle}
             className="bg-primary hover:bg-primary/90 text-primary-foreground font-body"
           >
             Sign In
