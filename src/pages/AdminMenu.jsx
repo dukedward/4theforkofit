@@ -35,6 +35,7 @@ const emptyItem = {
   category: "Entrees",
   image_url: "",
   featured: false,
+  has_sizes: false,
   available: true,
 };
 
@@ -97,6 +98,7 @@ export default function AdminMenu() {
       category: item.category || "Entrees",
       image_url: item.image_url || "",
       featured: item.featured || false,
+      has_sizes: item.has_sizes || false,
       available: item.available !== false,
     });
     setDialogOpen(true);
