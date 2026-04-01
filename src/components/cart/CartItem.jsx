@@ -5,6 +5,7 @@ import { useCart } from "@/context/CartContext";
 
 export default function CartItem({ item }) {
   const { updateQuantity, removeItem } = useCart();
+  console.log(item);
 
   return (
     <div className="flex items-center gap-4 py-4 border-b border-border/50 last:border-0">
@@ -21,6 +22,9 @@ export default function CartItem({ item }) {
         </h4>
         {item.selected_size && (
           <p className="text-xs text-muted-foreground">{item.selected_size}</p>
+        )}
+        {item.selected_sauce && (
+          <p className="text-xs text-muted-foreground">{item.selected_sauce}</p>
         )}
         <p className="font-body text-sm text-primary font-medium">
           ${item.price?.toFixed(2)} each

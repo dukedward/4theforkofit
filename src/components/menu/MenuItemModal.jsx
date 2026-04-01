@@ -3,12 +3,19 @@ import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { getItemSizes } from "@/lib/getItemSizes";
+import { getItemSauces } from "@/lib/getItemSauces";
 
 export default function MenuItemModal({ item, onClose }) {
   const { addItem } = useCart();
   const sizes = getItemSizes(item);
+  const sauces = getItemSauces(item);
   const hasSizes = sizes.length > 0;
+  const hasSauces = sauces.length > 0;
   const [selectedSize, setSelectedSize] = useState(sizes[0] || null);
+  const [selectedSauce, setSelectedSauce] = useState(sauces[0] || null);
+  if (selectedSauce) {
+    console.log(selectedSauce);
+  }
 
   if (!item) return null;
 
@@ -81,9 +88,40 @@ export default function MenuItemModal({ item, onClose }) {
             </div>
           )}
 
+          {hasSauces && (
+            <div className="mb-4">
+              <label className="font-body text-sm font-medium text-foreground block mb-2">
+                Sauce
+              </label>
+              <div className="flex gap-2 flex-wrap">
+                {sauces.map((sauce) => (
+                  <button
+                    key={sauce}
+                    onClick={() => setSelectedSauce(sauce)}
+                    className={`px-4 py-2 rounded-lg border font-body text-sm font-medium transition-colors ${
+                      selectedSauce === sauce
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-background border-border hover:border-primary text-foreground"
+                    }`}
+                  >
+                    {sauce}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <Button
             onClick={() => {
-              if (hasSizes && selectedSize) {
+              if (hasSauces && selectedSauce) {
+                addItem({
+                  ...item,
+                  selected_size: selectedSize.size,
+                  selected_sauce: selectedSauce,
+                  price: selectedSize.price,
+                  display_name: `${item.name} (${selectedSize.size}, ${selectedSauce})`,
+                });
+              } else if (hasSizes && selectedSize) {
                 addItem({
                   ...item,
                   selected_size: selectedSize.size,

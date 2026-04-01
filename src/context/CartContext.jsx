@@ -27,6 +27,7 @@ export function CartProvider({ children }) {
           name: menuItem.display_name || menuItem.name,
           base_name: menuItem.name,
           selected_size: menuItem.selected_size || null,
+          selected_sauce: menuItem.selected_sauce || null,
           price: menuItem.price,
           quantity,
           image_url: menuItem.image_url,
