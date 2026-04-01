@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, Menu, X, Flame } from "lucide-react";
+import {
+  ShoppingCart,
+  Menu,
+  X,
+  Flame,
+  LogIn,
+  LogOut,
+  ShieldCheck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/context/CartContext";
@@ -16,10 +24,17 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const { itemCount } = useCart();
-  const { user, logout } = useAuth();
+  const { user, profile, isAuthenticated, isAdmin, loginWithGoogle, logout } =
+    useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isAdmin = user?.role === "admin";
+
+  const displayName =
+    profile?.full_name ||
+    profile?.username ||
+    user?.displayName ||
+    user?.email ||
+    "Account";
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
@@ -58,6 +73,40 @@ export default function Navbar() {
                 )}
               </Button>
             </Link>
+            {isAdmin && (
+              <Link to="/admin">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="font-body gap-1.5"
+                >
+                  <ShieldCheck className="w-4 h-4" /> Admin
+                </Button>
+              </Link>
+            )}
+            {isAuthenticated ? (
+              <div className="flex items-center gap-2">
+                <span className="font-body text-xs text-muted-foreground hidden lg:block">
+                  {displayName}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={logout}
+                  title="Sign Out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                size="sm"
+                onClick={loginWithGoogle}
+                className="font-body bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5"
+              >
+                <LogIn className="w-4 h-4" /> Sign In
+              </Button>
+            )}
           </div>
 
           {/* Mobile */}
@@ -105,6 +154,36 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileOpen(false)}
+                  className="block font-body text-sm font-medium tracking-wide uppercase py-2 text-muted-foreground"
+                >
+                  Admin Panel
+                </Link>
+              )}
+              {isAuthenticated ? (
+                <button
+                  onClick={async () => {
+                    await logout();
+                    setMobileOpen(false);
+                  }}
+                  className="block font-body text-sm font-medium tracking-wide uppercase py-2 text-muted-foreground"
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <button
+                  onClick={async () => {
+                    await loginWithGoogle();
+                    setMobileOpen(false);
+                  }}
+                  className="block font-body text-sm font-medium tracking-wide uppercase py-2 text-primary"
+                >
+                  Sign In
+                </button>
+              )}
             </div>
           </motion.div>
         )}
