@@ -7,8 +7,8 @@ import { listItems } from "../api/menuItem";
 
 export default function Home() {
   const { data: featuredItems = [] } = useQuery({
-    queryKey: ["featured-items"],
-    queryFn: () => listItems.filter({ featured: true, available: true }),
+    queryKey: ["featured-items", { featured: true, available: true }],
+    queryFn: () => listItems({ featured: true, available: true }),
   });
 
   return (

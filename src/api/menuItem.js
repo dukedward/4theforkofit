@@ -14,8 +14,16 @@ import { db } from "@/lib/firebase";
 export async function listItems(filters = {}) {
   let q = collection(db, "items");
 
-  if (filters.available !== undefined) {
+  if (filters.featured !== undefined && filters.available !== undefined) {
+    q = query(
+      q,
+      where("available", "==", filters.available),
+      where("featured", "==", filters.featured),
+    );
+  } else if (filters.available !== undefined) {
     q = query(q, where("available", "==", filters.available));
+  } else if (filters.featured !== undefined) {
+    q = query(q, where("featured", "==", filters.featured));
   } else {
     q = query(q, orderBy("name", "asc"));
   }
