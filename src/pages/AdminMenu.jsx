@@ -27,6 +27,8 @@ import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { listItems, createItem, deleteItem, updateItem } from "../api/menuItem";
 import { CATEGORIES } from "@/lib/categories";
+import { getItemSizes } from "@/lib/getItemSizes";
+import { getItemSauces } from "@/lib/getItemSauces";
 
 const emptyItem = {
   name: "",
@@ -36,6 +38,9 @@ const emptyItem = {
   image_url: "",
   featured: false,
   has_sizes: false,
+  size_options: [],
+  has_sauces: false,
+  sauce_options: [],
   available: true,
 };
 
@@ -47,6 +52,10 @@ export default function AdminMenu() {
   const [uploading, setUploading] = useState(false);
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const sizes = form.size_options || getItemSizes(form) || [];
+  const sauces = form.sauce_options || getItemSauces(form) || [];
+  const hasSizes = !!form.has_sizes;
+  const hasSauces = !!form.has_sauces;
 
   const {
     data: items = [],
@@ -99,6 +108,7 @@ export default function AdminMenu() {
       image_url: item.image_url || "",
       featured: item.featured || false,
       has_sizes: item.has_sizes || false,
+      has_sauces: item.has_sauces || false,
       available: item.available !== false,
     });
     setDialogOpen(true);
@@ -386,27 +396,157 @@ export default function AdminMenu() {
               </label>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex-col items-center justify-between">
               <div className="flex items-center gap-2">
-                <Switch
-                  checked={form.featured}
-                  onCheckedChange={(v) => setForm({ ...form, featured: v })}
-                />
-                <Label className="font-body text-sm">Featured</Label>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={form.available}
+                    onCheckedChange={(v) => setForm({ ...form, available: v })}
+                  />
+                  <Label className="font-body text-sm">Available</Label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={form.featured}
+                    onCheckedChange={(v) => setForm({ ...form, featured: v })}
+                  />
+                  <Label className="font-body text-sm">Featured</Label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={form.has_sizes}
+                    onCheckedChange={(v) => setForm({ ...form, has_sizes: v })}
+                  />
+                  <Label className="font-body text-sm">Has Sizes</Label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={form.has_sauces}
+                    onCheckedChange={(v) => setForm({ ...form, has_sauces: v })}
+                  />
+                  <Label className="font-body text-sm">Has Sauces</Label>
+                </div>
+                <div></div>
               </div>
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={form.has_sizes}
-                  onCheckedChange={(v) => setForm({ ...form, has_sizes: v })}
-                />
-                <Label className="font-body text-sm">Has Sizes</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={form.available}
-                  onCheckedChange={(v) => setForm({ ...form, available: v })}
-                />
-                <Label className="font-body text-sm">Available</Label>
+              <div>
+                {hasSizes && (
+                  <div className="space-y-2 border border-border rounded-lg p-4">
+                    <Label className="font-body font-semibold">
+                      Portion Sizes
+                    </Label>
+                    {sizes.map((s, i) => (
+                      <div key={i} className="flex gap-2 items-center">
+                        <Input
+                          placeholder="Label (e.g. 10pc, 1 Rack)"
+                          value={s.size}
+                          onChange={(e) => {
+                            const sizes = [...sizes];
+                            sizes[i] = {
+                              ...sizes[i],
+                              size: e.target.value,
+                            };
+                            setForm({ ...form, has_sizes: sizes });
+                          }}
+                          className="font-body"
+                        />
+                        <Input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          placeholder="Price"
+                          value={s.price}
+                          onChange={(e) => {
+                            const sizes = [...sizes];
+                            sizes[i] = {
+                              ...sizes[i],
+                              price: parseFloat(e.target.value) || 0,
+                            };
+                            setForm({ ...form, has_sizes: sizes });
+                          }}
+                          className="font-body w-28"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="text-destructive h-8 w-8"
+                          onClick={() =>
+                            setForm({
+                              ...form,
+                              has_sizes: sizes.filter((_, j) => j !== i),
+                            })
+                          }
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="font-body"
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          has_sizes: [...sizes, { size: "", price: 0 }],
+                        })
+                      }
+                    >
+                      <Plus className="w-3 h-3 mr-1" /> Add Size
+                    </Button>
+                  </div>
+                )}
+
+                {hasSauces && (
+                  <div className="space-y-2 border border-border rounded-lg p-4">
+                    <Label className="font-body font-semibold">
+                      Available Sauces
+                    </Label>
+                    {sauces.map((sauce, i) => (
+                      <div key={i} className="flex gap-2 items-center">
+                        <Input
+                          placeholder="Sauce name"
+                          value={sauce}
+                          onChange={(e) => {
+                            const sauces = [...sauces];
+                            sauces[i] = e.target.value;
+                            setForm({ ...form, has_sauces: sauces });
+                          }}
+                          className="font-body"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="text-destructive h-8 w-8"
+                          onClick={() =>
+                            setForm({
+                              ...form,
+                              has_sauces: sauces.filter((_, j) => j !== i),
+                            })
+                          }
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="font-body"
+                      onClick={() =>
+                        setForm({ ...form, has_sauces: [...sauces, ""] })
+                      }
+                    >
+                      <Plus className="w-3 h-3 mr-1" /> Add Sauce
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
 
