@@ -5,53 +5,18 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  onAuthStateChanged,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
 import { auth, googleProvider, db } from "@/lib/firebase";
+import { syncUser } from "@/api/user";
 
 const AuthContext = createContext();
-
-async function syncUserProfile(firebaseUser) {
-  if (!firebaseUser) return null;
-
-  const ref = doc(db, "users", firebaseUser.uid);
-  const snap = await getDoc(ref);
-  const now = Date.now();
-
-  if (!snap.exists()) {
-    const newProfile = {
-      user_id: firebaseUser.uid,
-      user_email: firebaseUser.email || "",
-      full_name: firebaseUser.displayName || "",
-      username: firebaseUser.displayName || "",
-      avatar_url: firebaseUser.photoURL || "",
-      role: "customer",
-      provider: firebaseUser.providerData?.[0]?.providerId || "google.com",
-      created_at: now,
-      updated_at: now,
-    };
-
-    await setDoc(ref, newProfile);
-    return newProfile;
-  }
-
-  const existing = snap.data();
-
-  const updatedProfile = {
-    ...existing,
-    user_id: firebaseUser.uid,
-    user_email: firebaseUser.email || existing.user_email || "",
-    full_name:
-      existing.full_name || firebaseUser.displayName || existing.username || "",
-    username:
-      existing.username || firebaseUser.displayName || existing.full_name || "",
-    avatar_url: firebaseUser.photoURL || existing.avatar_url || "",
-    updated_at: now,
-  };
-
-  await setDoc(ref, updatedProfile, { merge: true });
-  return updatedProfile;
-}
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -74,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
         setUser(firebaseUser);
 
-        const syncedProfile = await syncUserProfile(firebaseUser);
+        const syncedProfile = await syncUser(firebaseUser);
         setProfile(syncedProfile);
       } catch (error) {
         console.error("Auth/profile sync error:", error);
@@ -92,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   const loginWithGoogle = async () => {
     setAuthError(null);
     const result = await signInWithPopup(auth, googleProvider);
-    const syncedProfile = await syncUserProfile(result.user);
+    const syncedProfile = await syncUser(result.user);
     setUser(result.user);
     setProfile(syncedProfile);
     return result;
@@ -106,9 +71,19 @@ export const AuthProvider = ({ children }) => {
 
   const refreshProfile = async () => {
     if (!auth.currentUser) return null;
-    const syncedProfile = await syncUserProfile(auth.currentUser);
+    const syncedProfile = await syncUser(auth.currentUser);
     setProfile(syncedProfile);
     return syncedProfile;
+  };
+
+  const loginWithEmail = async (email, password) => {
+    await signInWithEmailAndPassword(auth, email, password);
+  };
+
+  const registerWithEmail = async (email, password, username) => {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(result.user, { username });
+    await syncUser(result.user);
   };
 
   const value = useMemo(
@@ -120,8 +95,10 @@ export const AuthProvider = ({ children }) => {
       isLoadingAuth,
       authError,
       loginWithGoogle,
+      loginWithEmail,
       logout,
       refreshProfile,
+      registerWithEmail,
     }),
     [user, profile, isLoadingAuth, authError],
   );
